@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Provide Mobile number to continue</title>
+</head>
+<body>
+<a href="{% url 'core:logout' %}" style="position:absolute; right:200px" >Logout</a>
+Hello {{ username }}. Provide mobile Number to continue.
+<form action="{% url 'core:gitlogin' %}" method="post">
+    <label for="mobile">Phone Number</label><br>
+    <input type="text" id="mobile" name="mobile" value=""><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup</title>
+</head>
+<body>
+<h4>Signup Form</h4>
+<form action="{% url 'core:signup' %}" method="post">
+    <label for="name">Name:</label><br><br>
+    <input type="text" id="name" name="name" value="Ankit"><br><br>
+
+    <label for="mobile">Phone Number</label><br>
+    <input type="text" id="mobile" name="mobile" value="9113282346"><br><br>
+
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" value="password"><br><br>
+
+    <label for="email">Email:</label><br><br>
+    <input type="text" id="email" name="email" value="example@example.com"><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

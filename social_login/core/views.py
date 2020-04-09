@@ -81,9 +81,13 @@ def set_password_view(request):
 def set_password(request):
     password = request.POST['password']
     auth_user = request.user
-    auth_user.set_password(password)
-    auth_user.save()
-    return render(request, 'core/passwordsuccessful.html', {})
+    try:
+        git_profile = GitHubProfile.objects.get(username=auth_user.username)
+        return HttpResponse('This is a github user, its password cannot be changed in this application.')
+    except:
+        auth_user.set_password(password)
+        auth_user.save()
+        return render(request, 'core/passwordsuccessful.html', {})
 
 
 @login_required

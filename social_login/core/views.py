@@ -8,6 +8,17 @@ from .models import UserProfile, GitHubProfile
 
 # Create your views here.
 def home_page(request):
+    if request.user.is_authenticated:
+        try:
+            user_profile = UserProfile.objects.get(user_id=request.user.id)
+            return render(request, 'core/login.html', {'user_profile': user_profile})
+        except:
+            try:
+                github_profile = GitHubProfile.objects.get(user_id=request.user.id)
+                user_profile = UserProfile.objects.get(github_profile_id=github_profile.id)
+                return render(request, 'core/login.html', {'user_profile': user_profile})
+            except:
+                pass
     return render(request, 'core/homepage.html', {})
 
 
@@ -96,36 +107,39 @@ def search_user(request):
     user_profile = UserProfile.objects.get(mobile=mobile)
     return render(request, 'core/iddetails.html', {'user_profile': user_profile})
 
+
 def account_profile(request):
-    return render(request, 'core/mobiletocontinue.html', {'username': request.user.username})
+    # if user's profile exists. Don't ask for phone number.
+    try:
+        user_profile = UserProfile.objects.get(github_profile=GitHubProfile.objects.get(user_id=request.user.id))
+        return render(request, 'core/login.html', {'user_profile': user_profile})
+    except:
+        return render(request, 'core/mobiletocontinue.html', {'username': request.user.username})
 
 
-def git_login(request):
+def git_signup(request):
     mobile = request.POST['mobile']
     username, email = request.user.username, request.user.email
-    try:
-        git_user = GitHubProfile.objects.get(email=email)
-        user = UserProfile.objects.get(mobile=mobile)
-        return render(request, 'core/login.html', {'user_profile': user})
-    except:
-        try:
-            user = UserProfile.objects.get(mobile=mobile)
 
-            if user.github_profile and user.github_profile.username != username:
-                auth_user = AuthenticationUser.objects.get(username=username)
-                logout(request)
-                auth_user.delete()
-                return HttpResponse("This mobile is already registered with a different github account.")
-            else:
-                git_user = GitHubProfile(username=username, email=email, user=request.user)
-                git_user.save()
-                user.github_profile = git_user
-                user.save()
-        except:
-            git_user = GitHubProfile(username=request.user.username, email=request.user.email, user=request.user)
+    try:
+        user = UserProfile.objects.get(mobile=mobile)
+        if user.github_profile and user.github_profile.username != username:
+            auth_user = AuthenticationUser.objects.get(username=username)
+            logout(request)
+            auth_user.delete()
+            return HttpResponse("This mobile is already registered with a different github account.")
+
+        else:
+            git_user = GitHubProfile(username=username, email=email, user=request.user)
             git_user.save()
-            user = UserProfile(email=email, name=username, mobile=mobile)
+            user.github_profile = git_user
             user.save()
+    except:
+        git_user = GitHubProfile(username=request.user.username, email=request.user.email, user=request.user)
+        git_user.save()
+        user = UserProfile(email=email, name=username, mobile=mobile)
+        user.github_profile = git_user
+        user.save()
 
         return render(request, 'core/login.html', {'user_profile': user})
 

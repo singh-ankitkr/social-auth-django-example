@@ -6,4 +6,4 @@ from django.contrib import admin
 from .models import UserProfile, GitHubProfile
 
 admin.site.register(UserProfile)
-# admin.site.register(GitHubProfile)
+admin.site.register(GitHubProfile)

@@ -11,15 +11,15 @@ def home_page(request):
     if request.user.is_authenticated:
         try:
             user_profile = UserProfile.objects.get(user_id=request.user.id)
-            return render(request, 'core/login.html', {'user_profile': user_profile})
+            return render(request, 'core/userhome.html', {'user_profile': user_profile})
         except:
             try:
                 github_profile = GitHubProfile.objects.get(user_id=request.user.id)
                 user_profile = UserProfile.objects.get(github_profile_id=github_profile.id)
-                return render(request, 'core/login.html', {'user_profile': user_profile})
+                return render(request, 'core/userhome.html', {'user_profile': user_profile})
             except:
                 pass
-    return render(request, 'core/homepage.html', {})
+    return render(request, 'core/homepagelogin.html', {})
 
 
 def signin(request):
@@ -29,7 +29,7 @@ def signin(request):
     if user:
         login(request, user)
         user_profile = UserProfile.objects.get(mobile=mobile_number)
-        return render(request, 'core/login.html', {'user_profile': user_profile})
+        return render(request, 'core/userhome.html', {'user_profile': user_profile})
         # return HttpResponse("Succesfully logged in {}".format(user.first_name))
     else:
         return HttpResponse("Incorrect phone number or password.")
@@ -112,7 +112,7 @@ def account_profile(request):
     # if user's profile exists. Don't ask for phone number.
     try:
         user_profile = UserProfile.objects.get(github_profile=GitHubProfile.objects.get(user_id=request.user.id))
-        return render(request, 'core/login.html', {'user_profile': user_profile})
+        return render(request, 'core/userhome.html', {'user_profile': user_profile})
     except:
         return render(request, 'core/mobiletocontinue.html', {'username': request.user.username})
 
@@ -141,5 +141,5 @@ def git_signup(request):
         user.github_profile = git_user
         user.save()
 
-        return render(request, 'core/login.html', {'user_profile': user})
+        return render(request, 'core/userhome.html', {'user_profile': user})
 

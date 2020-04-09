@@ -16,5 +16,4 @@ urlpatterns = [
     path('user/set_password', views.set_password, name='setpassword'),
     path('user/set_password_view', views.set_password_view, name='setpasswordview'),
     path('user/search/', views.search_user, name='searchuser')
-
 ]

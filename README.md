@@ -4,6 +4,7 @@ Description: This is a demonstration of using github's social authentication for
 
 Usage:
 
+## local deployment
 1) Create a virtualenv using python 3.
 2) run the command 'pip install -r requirements.txt' from the projects home folder.
 3) Run 'python manage.py runserver'
